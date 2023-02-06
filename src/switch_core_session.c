@@ -2380,7 +2380,7 @@ SWITCH_DECLARE(switch_core_session_t *) switch_core_session_request_uuid(switch_
 	int32_t sps = 0;
 
 
-	if (use_uuid && switch_core_hash_find(session_manager.session_table, use_uuid)) {
+	if (use_uuid && switch_core_hash_find_locked(session_manager.session_table, use_uuid, runtime.session_hash_mutex)) {
 		switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_CRIT, "Duplicate UUID!\n");
 		return NULL;
 	}
