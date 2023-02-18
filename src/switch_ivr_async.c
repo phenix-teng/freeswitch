@@ -5389,6 +5389,14 @@ SWITCH_DECLARE(switch_status_t) switch_ivr_detect_speech_init(switch_core_sessio
 
 	switch_core_session_get_read_impl(session, &read_impl);
 
+	// Clear session event queue
+	if (switch_channel_var_true(channel, "play_and_detect_speech_close_asr")) {
+		switch_event_t *event = NULL;
+		while ((switch_status_t)switch_queue_trypop(session->event_queue, &event) == SWITCH_STATUS_SUCCESS) {
+			switch_event_destroy(&event);
+		}
+	}
+
 	if ((status = switch_core_asr_open(ah,
 									   mod_name,
 									   "L16",
